@@ -2,6 +2,7 @@
   session_start();
 
   require "../config/config.php";
+  require "../config/common.php";
 
   if($_SESSION['user']['role'] != 1) {
     echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
@@ -81,26 +82,27 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data" >
-                    <div class="form-group">
-                        <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
-                        <label for="">Title</label>
-                        <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" value="<?php echo $result['title']?>" name="title">
-                        <?php echo $titleErr; ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Content</label>
-                        <textarea name="content" id="" cols="30" rows="10" class="form-control <?php echo $contentErr ? 'is-invalid' : null; ?>"><?php echo $result['content'];?></textarea>
-                        <?php echo $contentErr; ?>
-                    </div>
-                    <div class="form-group">
-                        <img src="img/<?php echo $result['img'] ?>" width="200px" height="150px" alt=""> <br> <br>
-                        <label for="">Image</label>
-                        <input type="file" name="img" id="" accept="image/*" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" name="submit" class="btn btn-success">Update</button>
-                        <a href="index.php" class="btn btn-warning">Back</a>
-                    </div>
+                  <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+                  <div class="form-group">
+                      <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                      <label for="">Title</label>
+                      <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" value="<?php echo $result['title']?>" name="title">
+                      <?php echo $titleErr; ?>
+                  </div>
+                  <div class="form-group">
+                      <label for="">Content</label>
+                      <textarea name="content" id="" cols="30" rows="10" class="form-control <?php echo $contentErr ? 'is-invalid' : null; ?>"><?php echo $result['content'];?></textarea>
+                      <?php echo $contentErr; ?>
+                  </div>
+                  <div class="form-group">
+                      <img src="img/<?php echo $result['img'] ?>" width="200px" height="150px" alt=""> <br> <br>
+                      <label for="">Image</label>
+                      <input type="file" name="img" id="" accept="image/*" class="form-control">
+                  </div>
+                  <div class="form-group">
+                      <button type="submit" name="submit" class="btn btn-success">Update</button>
+                      <a href="index.php" class="btn btn-warning">Back</a>
+                  </div>
                 </form>
             </div>
           </div>

@@ -2,6 +2,7 @@
   session_start();
 
   require "../config/config.php";
+  require "../config/common.php";
 
   if($_SESSION['user']['role'] != 1) {
     echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
@@ -86,6 +87,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="add_user.php" method="post">
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group">
                         <label for="">Name</label>
                         <input type="text" class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" placeholder="Name" name="name">

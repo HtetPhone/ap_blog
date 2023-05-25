@@ -2,17 +2,20 @@
   session_start();
 
   require "../config/config.php";
+  require "../config/common.php";
 
   if($_SESSION['user']['role'] != 1) {
     echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
     ";
   }
 
+
+
   
   $titleErr = $contentErr = $imgErr = "";
 
   if(isset($_POST['submit'])){
-    // print_r($_FILES['img']['name']); exit();
+    
     if(empty($_POST['title'])) {
         $titleErr = "<p class='text-danger'>Title is empty </p>";
     }else {
@@ -68,6 +71,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data" >
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group">
                         <label for="">Title</label>
                         <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" placeholder="Title" name="title">

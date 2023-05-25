@@ -2,6 +2,7 @@
   session_start();
 
   require "../config/config.php";
+  require "../config/common.php";
 
   if($_SESSION['user']['role'] != 1) {
     echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
@@ -84,31 +85,32 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="edit_user.php?id=<?php echo $_GET['id'];?>" method="post" enctype="multipart/form-data" >
-                    <div class="form-group">
-                        <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
-                        <label for="">Name</label>
-                        <input type="text" class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" value="<?php echo $result['name']?>" name="name">
-                        <?php echo $nameErr; ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Email</label>
-                        <input type="email" class="form-control <?php echo $emailErr ? 'is-invalid' : null; ?>" value="<?php echo $result['email']?>" name="email">
-                        <?php echo $emailErr; ?>
-                    </div>
-                    <!-- <div class="form-group">
-                      <label for="">Password</label>
-                      <?php echo $result['password'] ?'<p class="text-warning">user has password</p>' : null ?>
-                      <input type="password" class="form-control" value="" name="password">
-                    </div> -->
-                    <div class="form-group">
-                        <label for="">Admin</label> <br>
-                        <input type="checkbox" name="role" id="" <?php echo $result['role'] == 1 ? 'checked' : null ?>>
-                    </div>
-                  
-                    <div class="form-group">
-                        <button type="submit" name="submit" class="btn btn-success">Update</button>
-                        <a href="user_list.php" class="btn btn-warning">Back</a>
-                    </div>
+                  <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+                  <div class="form-group">
+                      <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                      <label for="">Name</label>
+                      <input type="text" class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" value="<?php echo $result['name']?>" name="name">
+                      <?php echo $nameErr; ?>
+                  </div>
+                  <div class="form-group">
+                      <label for="">Email</label>
+                      <input type="email" class="form-control <?php echo $emailErr ? 'is-invalid' : null; ?>" value="<?php echo $result['email']?>" name="email">
+                      <?php echo $emailErr; ?>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label for="">Password</label>
+                    <?php echo $result['password'] ?'<p class="text-warning">user has password</p>' : null ?>
+                    <input type="password" class="form-control" value="" name="password">
+                  </div> -->
+                  <div class="form-group">
+                      <label for="">Admin</label> <br>
+                      <input type="checkbox" name="role" id="" <?php echo $result['role'] == 1 ? 'checked' : null ?>>
+                  </div>
+                
+                  <div class="form-group">
+                      <button type="submit" name="submit" class="btn btn-success">Update</button>
+                      <a href="user_list.php" class="btn btn-warning">Back</a>
+                  </div>
                 </form>
             </div>
           </div>

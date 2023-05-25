@@ -1,5 +1,6 @@
 <?php 
   require "config/config.php";
+  require "config/common.php";
 
   $nameErr = $emailErr = $passwordErr = "";
 
@@ -73,6 +74,7 @@
       <p class="login-box-msg">Register A New Account</p>
 
       <form action="register.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
             <input type="text" name='name' class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" placeholder="Name">
             <div class="input-group-append">
