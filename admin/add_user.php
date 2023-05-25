@@ -27,6 +27,7 @@
       $passwordErr = "<p class='text-danger'>password is empty </p>";
     }else {
       $password = filter_input(INPUT_POST,'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $sPass = password_hash($password, PASSWORD_DEFAULT);
     }
 
     if(empty($nameErr) && empty($emailErr) && empty($passwordErr)) {
@@ -38,10 +39,10 @@
          echo "<script> alert('User exist!!');</script>";
      }else {
          if(isset($_POST['role'])) {
-             $role = 1;
+             $role = 1; 
              $sql = "INSERT INTO users(name, email, password, role) VALUES (?,?,?,?)";
              $stmt = $pdo->prepare($sql);
-             $result = $stmt->execute([$name,$email,$password,$role]);
+             $result = $stmt->execute([$name,$email,$sPass,$role]);
              if($result) {
                  echo "<script> alert('Successfully added!'); window.location.href='user_list.php'; </script>";
                }
@@ -50,7 +51,7 @@
              $role = 0;
              $sql = "INSERT INTO users(name, email, password, role) VALUES (?,?,?,?)";
              $stmt = $pdo->prepare($sql);
-             $result = $stmt->execute([$name,$email,$password,$role]);
+             $result = $stmt->execute([$name,$email,$sPass,$role]);
              if($result) {
                  echo "<script> alert('Successfully added!');window.location.href='user_list.php';    </script>";
                }

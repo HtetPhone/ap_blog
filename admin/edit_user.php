@@ -15,7 +15,6 @@
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = $id");
     $stmt->execute();
     $result = $stmt->fetch();
-    // print_r($result);
   }
 
   $nameErr = $emailErr = "";
@@ -96,11 +95,11 @@
                         <input type="email" class="form-control <?php echo $emailErr ? 'is-invalid' : null; ?>" value="<?php echo $result['email']?>" name="email">
                         <?php echo $emailErr; ?>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="">Password</label>
                       <?php echo $result['password'] ?'<p class="text-warning">user has password</p>' : null ?>
                       <input type="password" class="form-control" value="" name="password">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="">Admin</label> <br>
                         <input type="checkbox" name="role" id="" <?php echo $result['role'] == 1 ? 'checked' : null ?>>

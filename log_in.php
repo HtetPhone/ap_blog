@@ -1,27 +1,33 @@
 <?php 
     session_start();
     require "config/config.php";
- 
-    if($_POST) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+
+    $email = filter_input(INPUT_POST,'email', FILTER_SANITIZE_EMAIL);
+
+    $password = filter_input(INPUT_POST,'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     $stmt=$pdo->prepare("SELECT * FROM users WHERE email=:email");
     $stmt->bindValue(':email', $email);
     $stmt->execute();
     $user = $stmt->fetch();
     if($user) {
-        if($user['password'] == $_POST['password']) {
+        $hashedPw = $user['password'];
+        if(password_verify($password, $hashedPw)) {
         $_SESSION['user'] = $user;
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['logged_in'] = time();
 
         header('Location: index.php');
         }
+        else {
+          echo "<script> alert('Incorrect Credentials') </script>";
+        }
     }
 
-    echo "<script> alert('Incorrect Credentials') </script>";
-    }
+    
+
+
+
 
 ?>
 
@@ -61,9 +67,9 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
+          <input type="password" name="password" placeholder="Password" class="form-control" required>
           <div class="input-group-append">
-            <div class="input-group-text">
+            <div class="input-group-text">  
               <span class="fas fa-lock"></span>
             </div>
           </div>

@@ -1,28 +1,29 @@
 <?php 
   require "../config/config.php";
-  
-  $nameErr = $emailErr = $passwordErr = "";
 
-  if($_POST) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+  if(isset($_POST['submit'])) {
+
+    $email = filter_input(INPUT_POST,'email', FILTER_SANITIZE_EMAIL);
+    $password = filter_input(INPUT_POST,'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     $stmt=$pdo->prepare("SELECT * FROM users WHERE email=:email");
     $stmt->bindValue(':email', $email);
     $stmt->execute();
     $user = $stmt->fetch();
     if($user) {
-      if($user['password'] == $_POST['password']) {
+      $hashedPw = $user['password'];
+      if(password_verify($password, $hashedPw)) {
         session_start();
         $_SESSION['user'] = $user;
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['logged_in'] = time();
-
+  
         header('Location: index.php');
       }
+    }else {
+      echo "<script> alert('Incorrect Credentials') </script>";
     }
 
-    echo "<script> alert('Incorrect Credentials') </script>";
   }
 
 ?>
@@ -69,17 +70,13 @@
               <span class="fas fa-lock"></span>
             </div>
           </div>
-        </div>
+        </div> 
         <div class="row">
-          <!-- /.col -->
           <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block" name="submit">Sign In</button>
           </div>
-          <!-- /.col -->
         </div>
       </form>
-      <!-- /.social-auth-links -->
-    <!-- /.login-card-body -->
   </div>
 </div>
 <!-- /.login-box -->
@@ -87,7 +84,7 @@
 <!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>   
 <!-- AdminLTE App -->
 <script src="../dist/js/adminlte.min.js"></script>
 </body>
