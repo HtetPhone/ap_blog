@@ -3,28 +3,48 @@
 
   require "../config/config.php";
 
-  if(!$_SESSION['user']) {
-    header('Location: login.php');
+  if($_SESSION['user']['role'] != 1) {
+    echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
+    ";
   }
 
+  
+  $titleErr = $contentErr = $imgErr = "";
+
   if(isset($_POST['submit'])){
-    $title = $_POST['title'];
-    $content = $_POST['content'];
+    // print_r($_FILES['img']['name']); exit();
+    if(empty($_POST['title'])) {
+        $titleErr = "<p class='text-danger'>Title is empty </p>";
+    }else {
+      $title = filter_input(INPUT_POST,'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
 
-    // files 
-    $dir = "img/";
-    $img_name = $_FILES['img']['name'];
-    $tmp_name = $_FILES['img']['tmp_name'];
-    
-    // print_r($_POST);
-    move_uploaded_file($tmp_name, $dir.$img_name);
+    if(empty($_POST['content'])) {
+        $contentErr = "<p class='text-danger'>Content is empty </p>";
+    }else {
+      $content = filter_input(INPUT_POST,'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
 
-    $sql = "INSERT INTO posts(title, content, img, author_id) VALUES (?,?,?,?)";
-    $stmt = $pdo->prepare($sql);
-    $result = $stmt->execute([$title,$content,$img_name,$_SESSION['user_id']]);
+    if(empty($_FILES['img']['name'])) {
+        $imgErr = "<p class='text-danger'>Image is empty </p>";
+    }
 
-    if($result) {
-      echo "<script> alert('Successfully added!'); window.location.href='index.php'; </script>";
+    if(empty($titleErr) && empty($contentErr) && empty($imgErr)) {
+      // files 
+      $dir = "img/";
+      $img_name = $_FILES['img']['name'];
+      $tmp_name = $_FILES['img']['tmp_name'];
+      
+      // print_r($_POST);
+      move_uploaded_file($tmp_name, $dir.$img_name);
+
+      $sql = "INSERT INTO posts(title, content, img, author_id) VALUES (?,?,?,?)";
+      $stmt = $pdo->prepare($sql);
+      $result = $stmt->execute([$title,$content,$img_name,$_SESSION['user_id']]);
+
+      if($result) {
+        echo "<script> alert('Successfully added!'); window.location.href='index.php'; </script>";
+      }
     }
   
 }
@@ -50,15 +70,18 @@
                 <form action="" method="post" enctype="multipart/form-data" >
                     <div class="form-group">
                         <label for="">Title</label>
-                        <input type="text" class="form-control" placeholder="Title" name="title" required>
+                        <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" placeholder="Title" name="title">
+                        <?php echo $titleErr ?>
                     </div>
                     <div class="form-group">
                         <label for="">Content</label>
-                        <textarea name="content" id="" cols="30" rows="10" class="form-control" required></textarea>
+                        <textarea name="content" id="" cols="30" rows="10" class="form-control <?php echo $contentErr ? 'is-invalid' : null; ?>"></textarea>
+                        <?php echo $contentErr ?>
                     </div>
                     <div class="form-group">
                         <label for="">Image</label>
-                        <input type="file" name="img" id="" accept="image/*" required>
+                        <input type="file" name="img" id="" accept="image/*" class="form-control <?php echo $imgErr ? 'is-invalid' : null; ?>">
+                        <?php echo $imgErr ?>
                     </div>
                     <div class="form-group">
                         <button type="submit" name="submit" class="btn btn-success">Create</button>

@@ -1,6 +1,8 @@
 <?php 
   require "../config/config.php";
- 
+  
+  $nameErr = $emailErr = $passwordErr = "";
+
   if($_POST) {
     $email = $_POST['email'];
     $password = $_POST['password'];

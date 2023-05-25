@@ -1,13 +1,25 @@
 <?php
   session_start();
-
   require "../config/config.php";
-  if(!$_SESSION['user']) {
-    header('Location: login.php');
+
+  // print_r($_SESSION['user']['role']);
+  if($_SESSION['user']['role'] != 1) {
+    echo "<script> alert('You cant have access to this page!');window.location.href='login.php'; </script>
+    ";
+  }
+
+  if(isset($_POST['search'])){
+    setcookie('search', $_POST['search'], time() + (86400 * 3), "/");
+    // echo $_COOKIE['search'];
+    // exit();
+  }else {
+    if(empty($_GET['pageno'])){
+      unset($_COOKIE['search']); 
+      setcookie('search', null, -1, '/'); 
+    }
   }
 
 ?>
-
 
 <?php include "template/header.php"; ?>
 
@@ -28,29 +40,21 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th style="width: 10px">#</th>
-                    <th>Title</th>
-                    <th width="50%">Content</th>
-                    <th width="18%">Operations</th>
-                  </tr>
-                </thead>
-                <tbody>
                 <?php
-                  if(empty($_POST['search'])) {
-                    $stmt = $pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
-                    $stmt->execute();
-                    $posts = $stmt->fetchAll();
+                  //retrieving data 
+                  $stmt = $pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
+                  $stmt->execute();
+                  $posts = $stmt->fetchAll();
 
+                  //search
+                  if(empty($_POST['search']) && empty($_COOKIE['search'])) {
                     // for pagination 
                     if(!empty($_GET['pageno'])) {
                       $pageNo = $_GET['pageno'];
                     }else {
                       $pageNo = 1;
                     }
-                    $numberOrecs = 2; //two show
+                    $numberOrecs = 5; //to show
                     $offset = ($pageNo - 1) * $numberOrecs;
 
                     $totalPage = ceil(count($posts) / $numberOrecs); //chopping down the posts into pages
@@ -61,7 +65,7 @@
                     // for pagination 
                   }else {
                     // when u search 
-                    $searchKey = $_POST['search'];
+                    $searchKey = !empty($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
                     $stmt = $pdo->prepare("SELECT * FROM posts WHERE title LIKE '%$searchKey%' ORDER BY id DESC");
                     // print_r($stmt); exit();
                     $stmt->execute();
@@ -73,7 +77,7 @@
                     }else {
                       $pageNo = 1;
                     }
-                    $numberOrecs = 2; //two show
+                    $numberOrecs = 5; //two show
                     $offset = ($pageNo - 1) * $numberOrecs;
 
                     $totalPage = ceil(count($posts) / $numberOrecs); //chopping down the posts into pages
@@ -83,24 +87,32 @@
                     $pages = $stmt->fetchAll();
                   // for pagination  
                 }
-
-
                 ?>
-                <?php foreach($pages as $key => $post): ?>
-                  <tr>
-                    <td><?php echo $key + 1 ?></td>
-                    <td><?php echo $post['title'] ?></td>
-                    <td>
-                      <?php echo $post['content'] ?>
-                    </td>
-                    <td>
-                      <a href="edit.php?id=<?php echo $post['id'] ?>" class="btn btn-warning">Edit</a>
-                      <a href="delete.php?id=<?php echo $post['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-                </tbody>
-              </table> <br>
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Content</th>
+                      <th scope="col" width="20%">Operations</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php foreach($pages as $key => $post): ?>
+                    <tr>
+                      <th scope="row"><?php echo $key + 1 ?></th>
+                      <td><?php echo $post['title'] ?></td>
+                      <td><?php echo substr($post['content'], 0, 80); ?></td>
+                      <td class="d-flex align-items-center">
+                        <div class="mr-2"><a href="edit.php?id=<?php echo $post['id'] ?>" class="btn btn-warning">Edit</a></div>
+                        <div><a href="delete.php?id=<?php echo $post['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item')">Delete</a></div>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
 
               <!-- pagination  -->
               <nav aria-label="Page navigation example" class="float-right">
