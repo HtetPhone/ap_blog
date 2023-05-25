@@ -17,7 +17,7 @@
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
-  <footer class="main-footer py-4">
+  <footer class="main-footer py-4 mt-5">
   <!-- To the right -->
   <div class="float-right d-none d-sm-inline">
     <a href="log_out.php" class="btn btn-default">Log Out</a>
