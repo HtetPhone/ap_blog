@@ -1,6 +1,7 @@
 <?php
   session_start();
   require "../config/config.php";
+  require "../config/common.php";
 
   // print_r($_SESSION['user']['role']);
   if($_SESSION['user']['role'] != 1) {
@@ -101,9 +102,9 @@
                   <tbody>
                   <?php foreach($pages as $key => $post): ?>
                     <tr>
-                      <th scope="row"><?php echo $key + 1 ?></th>
-                      <td><?php echo $post['title'] ?></td>
-                      <td><?php echo substr($post['content'], 0, 80); ?></td>
+                      <th scope="row"><?php echo escape($key + 1) ?></th>
+                      <td><?php echo escape($post['title'])?></td>
+                      <td><?php echo escape(substr($post['content'], 0, 80))?></td>
                       <td class="d-flex align-items-center">
                         <div class="mr-2"><a href="edit.php?id=<?php echo $post['id'] ?>" class="btn btn-warning">Edit</a></div>
                         <div><a href="delete.php?id=<?php echo $post['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item')">Delete</a></div>

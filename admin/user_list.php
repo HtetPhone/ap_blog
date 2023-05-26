@@ -103,8 +103,8 @@
                   <?php foreach($pages as $key => $user): ?>
                     <tr>
                       <td><?php echo $key + 1 ?></td>
-                      <td><?php echo $user['name'] ?></td>
-                      <td><?php echo $user['email'] ?></td>
+                      <td><?php echo escape($user['name']) ?></td>
+                      <td><?php echo escape($user['email']) ?></td>
                       <td><?php echo $user['role'] ?></td>
                       
                       <td>

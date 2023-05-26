@@ -87,14 +87,14 @@
                 <form action="edit_user.php?id=<?php echo $_GET['id'];?>" method="post" enctype="multipart/form-data" >
                   <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                   <div class="form-group">
-                      <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                      <input type="hidden" name="id" value="<?php echo escape( $_GET['id']) ?>">
                       <label for="">Name</label>
-                      <input type="text" class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" value="<?php echo $result['name']?>" name="name">
+                      <input type="text" class="form-control <?php echo $nameErr ? 'is-invalid' : null; ?>" value="<?php echo escape($result['name'])?>" name="name">
                       <?php echo $nameErr; ?>
                   </div>
                   <div class="form-group">
                       <label for="">Email</label>
-                      <input type="email" class="form-control <?php echo $emailErr ? 'is-invalid' : null; ?>" value="<?php echo $result['email']?>" name="email">
+                      <input type="email" class="form-control <?php echo $emailErr ? 'is-invalid' : null; ?>" value="<?php echo escape($result['email'])?>" name="email">
                       <?php echo $emailErr; ?>
                   </div>
                   <!-- <div class="form-group">

@@ -86,12 +86,12 @@
                   <div class="form-group">
                       <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
                       <label for="">Title</label>
-                      <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" value="<?php echo $result['title']?>" name="title">
+                      <input type="text" class="form-control <?php echo $titleErr ? 'is-invalid' : null; ?>" value="<?php echo escape($result['title'])?>" name="title">
                       <?php echo $titleErr; ?>
                   </div>
                   <div class="form-group">
                       <label for="">Content</label>
-                      <textarea name="content" id="" cols="30" rows="10" class="form-control <?php echo $contentErr ? 'is-invalid' : null; ?>"><?php echo $result['content'];?></textarea>
+                      <textarea name="content" id="" cols="30" rows="10" class="form-control <?php echo $contentErr ? 'is-invalid' : null; ?>"><?php echo escape($result['content']) ;?></textarea>
                       <?php echo $contentErr; ?>
                   </div>
                   <div class="form-group">

@@ -1,6 +1,7 @@
 <?php
     session_start();
     require "config/config.php";
+    require "config/common.php";
 
     if(!$_SESSION['user']) {
     header('Location: log_in.php');
@@ -115,7 +116,7 @@
             <div class="col-12 col-md-6  col-lg-4">
                 <div class="card" style="min-height: 350px!important;">
                     <div class="card-header">
-                        <h5 class="text-center mb-0"><?php echo $post['title'] ?></h5>
+                        <h5 class="text-center mb-0"><?php echo escape($post['title']) ?></h5>
                     </div>
                     <div class="card-body text-center"> 
                         <a href="blog_details.php?id=<?php echo $post['id']; ?>">

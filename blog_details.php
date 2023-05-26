@@ -2,9 +2,10 @@
     session_start();
     require "config/config.php";
 
-    require "config/config.php";
+    require "config/common.php";
+
     if(!$_SESSION['user']) {
-    header('Location: log_in.php');
+        header('Location: log_in.php');
     }
 
     //retrieving data
@@ -18,18 +19,15 @@
         echo "<script> alert('Successfully added!'); window.location.href='index.php'; </script>";
 
     }
-    // echo "<pre>";
-    // print_r($result);
-
 
     // uploading comments 
     $author_id = $_SESSION['user']['id'];
     $post_id = $_GET['id'];
-    if($_POST) {
+    if(isset($_POST['comment'])) {
         $comment = $_POST['comment'];
-        $sql = "INSERT INTO comments(content, author_id, post_id) VALUES (?,?,?)";
+        $sql = "INSERT INTO comments(content, post_id,author_id) VALUES (?,?,?)";
         $stmt = $pdo->prepare($sql);
-        $cmt_result = $stmt->execute([$comment,$author_id,$post_id]);
+        $cmt_result = $stmt->execute([$comment,$post_id,$author_id]);
 
         if($cmt_result) {
              echo "<script> alert('Your Comment is added!');</script>";
@@ -37,10 +35,11 @@
     }   
 
     //retrieving comments
-    $stmt = $pdo->prepare("SELECT * FROM comments WHERE post_id=$post_id");
-    $stmt->execute();
+    $stmt = $pdo->prepare("SELECT * FROM comments WHERE post_id=?");
+    $stmt->execute([$post_id]);
     $comments = $stmt->fetchAll();
-
+    // echo "<pre>";
+    // print_r($comments); exit();
 
 
 ?>
@@ -76,53 +75,53 @@
         <div class="col-12 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center mb-0"><?php echo $result['title'] ?></h3>
+                    <h3 class="text-center mb-0"><?php echo escape($result['title']) ?></h3>
                 </div>
                 <div class="card-body text-center"> 
                     <a href="blog_details.php?id=<?php echo $result['id']; ?>">
                         <img class="img-fluid pad mx-auto" src="admin/img/<?php echo $result['img'] ?>" alt="Photo" style="max-height:350px">
                     </a>
                     <p class="text-black-50 text-justify" style="text-indent: 35px;">
-                        <?php echo $result['content']; ?>
+                        <?php echo escape($result['content']); ?>
                     </p>
                     <h4>Comments</h4>
                     <hr>
                     <!-- comments -->
                     <div class="card-footer">
-                        <?php foreach($comments as $comment): ?>
+            
+                            <?php foreach($comments as $comment): ?>
                             <!-- getting author names  -->
-                            <?php
-                                $auth_id = $comment['author_id'];
-                               $stmt = $pdo->prepare("SELECT * FROM users WHERE id=$auth_id");
-                               $stmt->execute();
-                               $commentor = $stmt->fetch();
-                            ?>
+                                <?php
+                                    $auth_id = $comment['author_id'];
+                                    $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
+                                    $stmt->execute([$auth_id]);
+                                    $commentor = $stmt->fetch();
+                                ?>
 
                             <div>
                                 <div class="d-flex justify-content-start align-items-start text-start">
                                     <img src="dist/img/user4-128x128.jpg" alt="" class="img-circle mr-3" style="width: 40px">
-                                    <div class="">
+                                    <div class="text-left">
                                         <p class="commentor font-weight-bold mb-0" style="text-align: start!important;"><?php echo $commentor['name'] ?></p>
                                         <p class="content text-black-50"><?php echo $comment['content']; ?></p>
                                     </div>
                                 </div>
                             </div>
                             <hr>   
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
                     </div>
 
                     <!-- comment box  -->
                     <div class="card-footer">
                         <form action="blog_details.php?id=<?php echo $_GET['id'];?>" method="post">
-                            <input type="text" name="comment" class="form-control form-control-sm" placeholder="Press enter to post comment">
-                            </div>
+                            <input type="text" name="comment" class="form-control form-control-sm" placeholder="Press enter to post comment">   
+                            <input type="hidden" name="_token" value='<?php echo $_SESSION['_token'];?>' >
                         </form>
+                    </div> <br>
+                    <!-- GO BACK BTN  -->
+                    <div class="float-left">   
+                        <a href="index.php" class="btn btn-warning">Go Back</a>
                     </div>
-
-                </div>
-
-                <div>
-                    <a href="index.php" class="btn btn-warning">Go Back</a>
                 </div>
             </div>
         </div>
