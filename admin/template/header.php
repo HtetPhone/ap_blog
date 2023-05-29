@@ -30,6 +30,7 @@
     <li class="nav-item">
         <form class="form-inline" method="post">
           <div class="input-group">
+            <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
             <input class="form-control form-control-navbar" name="search" type="search" placeholder="Search" aria-label="Search">
         </form>
       </div>

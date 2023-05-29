@@ -71,7 +71,7 @@
         </div>
     </div>
     <div class="row p-2">
-        <!-- looping here  -->
+        <!-- looping here  --> 
         <div class="col-12 mx-auto">
             <div class="card">
                 <div class="card-header">

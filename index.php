@@ -102,6 +102,7 @@
             <div class="d-flex">
               <form class="form-inline" method="post">
                 <div class="input-group">
+                  <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                   <input class="form-control" name="search" type="search" placeholder="Search" aria-label="Search">
                 </div>
               </form>

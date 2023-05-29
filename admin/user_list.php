@@ -1,6 +1,7 @@
 <?php
     session_start();
     require "../config/config.php";
+    require "../config/common.php";
   
     // print_r($_SESSION['user']['role']);
     if($_SESSION['user']['role'] != 1) {
@@ -105,7 +106,7 @@
                       <td><?php echo $key + 1 ?></td>
                       <td><?php echo escape($user['name']) ?></td>
                       <td><?php echo escape($user['email']) ?></td>
-                      <td><?php echo $user['role'] ?></td>
+                      <td><?php echo $user['role'] == 1 ? "Admin" : "User"; ?></td>
                       
                       <td>
                         <a href="edit_user.php?id=<?php echo $user['id'] ?>" class="btn btn-warning">Edit</a>
