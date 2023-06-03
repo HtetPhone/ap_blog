@@ -1,4 +1,6 @@
 <?php 
+  session_start();
+
   require "../config/config.php";
   require "../config/common.php";
 
@@ -14,7 +16,6 @@
     if($user) {
       $hashedPw = $user['password'];
       if(password_verify($password, $hashedPw)) {
-        session_start();
         $_SESSION['user'] = $user;
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['logged_in'] = time();
